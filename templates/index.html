@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSV Cleaner Pro — Clean your data in seconds</title>
+  <script src="https://js.stripe.com/v3/"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #0f172a; }
+    .container { max-width: 800px; margin: 0 auto; padding: 24px; }
+    
+    header { text-align: center; padding: 48px 0 32px; }
+    header h1 { font-size: 40px; font-weight: 900; letter-spacing: -1px; margin-bottom: 12px; }
+    header h1 span { background: linear-gradient(135deg, #2563eb, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    header p { font-size: 18px; color: #64748b; max-width: 500px; margin: 0 auto; line-height: 1.6; }
+    
+    .pricing-toggle { display: flex; justify-content: center; gap: 12px; margin: 32px 0; }
+    .pricing-btn { padding: 12px 28px; border: 2px solid #e2e8f0; border-radius: 10px; background: white; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.2s; }
+    .pricing-btn.active { border-color: #2563eb; background: #eff6ff; color: #2563eb; }
+    .pricing-btn:hover { border-color: #2563eb; }
+    
+    .main-card { background: white; border-radius: 16px; border: 1px solid #e2e8f0; padding: 32px; box-shadow: 0 4px 24px rgba(0,0,0,0.04); }
+    
+    .upload-zone {
+      border: 2px dashed #cbd5e1; border-radius: 12px; padding: 48px 24px;
+      text-align: center; cursor: pointer; transition: all 0.3s;
+      background: #f8fafc;
+    }
+    .upload-zone:hover { border-color: #2563eb; background: #eff6ff; }
+    .upload-zone.dragover { border-color: #2563eb; background: #eff6ff; }
+    .upload-zone .icon { font-size: 48px; margin-bottom: 16px; }
+    .upload-zone h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .upload-zone p { color: #64748b; font-size: 14px; }
+    .upload-zone .formats { font-size: 12px; color: #94a3b8; margin-top: 8px; }
+    
+    .operations { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 24px 0; }
+    .op-btn { padding: 14px 18px; border: 2px solid #e2e8f0; border-radius: 10px; background: white; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.2s; text-align: center; }
+    .op-btn:hover { border-color: #94a3b8; }
+    .op-btn.selected { border-color: #2563eb; background: #eff6ff; color: #2563eb; }
+    .op-btn .desc { font-size: 11px; color: #94a3b8; font-weight: 400; margin-top: 4px; }
+    
+    .process-btn {
+      width: 100%; padding: 18px; background: linear-gradient(135deg, #2563eb, #7c3aed);
+      color: white; font-size: 17px; font-weight: 700; border: none; border-radius: 12px;
+      cursor: pointer; transition: all 0.2s; margin-top: 16px;
+    }
+    .process-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(37,99,235,0.3); }
+    .process-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    
+    .result-box { display: none; padding: 24px; background: #f0fdf4; border: 2px solid #22c55e; border-radius: 12px; margin-top: 24px; text-align: center; }
+    .result-box .check { font-size: 36px; margin-bottom: 8px; }
+    .result-box h3 { color: #166534; font-weight: 700; font-size: 18px; }
+    .result-box .stats { color: #166534; font-size: 14px; margin: 8px 0; }
+    .download-btn { display: inline-block; margin-top: 12px; padding: 12px 28px; background: #22c55e; color: white; border-radius: 8px; font-weight: 700; text-decoration: none; }
+    
+    .pricing-section { margin-top: 48px; text-align: center; }
+    .pricing-section h2 { font-size: 24px; font-weight: 800; margin-bottom: 24px; }
+    .pricing-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .price-card { background: white; border-radius: 16px; border: 2px solid #e2e8f0; padding: 32px; text-align: center; }
+    .price-card.featured { border-color: #2563eb; position: relative; }
+    .price-card.featured::before { content: 'BEST VALUE'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #2563eb; color: white; padding: 4px 16px; border-radius: 999px; font-size: 11px; font-weight: 800; letter-spacing: 1px; }
+    .price-card .price { font-size: 36px; font-weight: 900; color: #0f172a; margin: 12px 0; }
+    .price-card .price span { font-size: 16px; font-weight: 400; color: #64748b; }
+    .price-card ul { list-style: none; text-align: left; margin: 20px 0; }
+    .price-card li { padding: 8px 0; font-size: 14px; color: #475569; display: flex; align-items: center; gap: 8px; }
+    .price-card li::before { content: '✓'; color: #22c55e; font-weight: 700; }
+    .price-btn { width: 100%; padding: 14px; border: none; border-radius: 10px; font-weight: 700; font-size: 15px; cursor: pointer; transition: all 0.2s; }
+    .price-btn.primary { background: #2563eb; color: white; }
+    .price-btn.primary:hover { background: #1d4ed8; }
+    .price-btn.secondary { background: #f1f5f9; color: #0f172a; }
+    .price-btn.secondary:hover { background: #e2e8f0; }
+    
+    .error { display: none; padding: 16px; background: #fef2f2; border: 1px solid #ef4444; border-radius: 10px; color: #991b1b; font-size: 14px; margin-top: 16px; }
+    
+    .spinner { display: none; width: 24px; height: 24px; border: 3px solid #e2e8f0; border-top-color: #2563eb; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    
+    footer { text-align: center; padding: 48px 0; color: #94a3b8; font-size: 13px; }
+    
+    @media (max-width: 600px) {
+      .operations { grid-template-columns: 1fr; }
+      .pricing-cards { grid-template-columns: 1fr; }
+      header h1 { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🧹 CSV <span>Cleaner</span> Pro</h1>
+      <p>Upload a messy CSV or Excel file. Pick a cleaning operation. Download your clean data in seconds.</p>
+    </header>
+
+    <div class="main-card" id="app">
+      <!-- Upload Zone -->
+      <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+        <div class="icon">📂</div>
+        <h3>Drop your CSV file here</h3>
+        <p>or click to browse</p>
+        <div class="formats">Supports: .csv, .xlsx, .xls (max 10MB)</div>
+        <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" style="display:none" onchange="handleFile(this)" />
+      </div>
+      <div id="fileName" style="display:none;padding:12px;background:#eff6ff;border-radius:8px;margin-top:12px;font-size:14px;font-weight:600;"></div>
+
+      <!-- Operations -->
+      <div class="operations" id="operations">
+        <div class="op-btn selected" data-op="deduplicate" onclick="selectOp(this)">
+          🗑️ Remove Duplicates
+          <div class="desc">Delete exact duplicate rows</div>
+        </div>
+        <div class="op-btn" data-op="extract_emails" onclick="selectOp(this)">
+          📧 Extract Emails
+          <div class="desc">Pull all email addresses from data</div>
+        </div>
+        <div class="op-btn" data-op="clean_whitespace" onclick="selectOp(this)">
+          ✨ Clean Whitespace
+          <div class="desc">Remove extra spaces, trim cells</div>
+        </div>
+        <div class="op-btn" data-op="fill_empty" onclick="selectOp(this)">
+          🔧 Fill Empty Cells
+          <div class="desc">Replace blanks with 'N/A'</div>
+        </div>
+      </div>
+
+      <!-- Status & Process -->
+      <div id="creditStatus" style="text-align:center;font-size:13px;color:#64748b;margin-bottom:8px;">
+        Free tier: <strong>2 credits</strong> remaining
+      </div>
+      
+      <button class="process-btn" id="processBtn" onclick="processFile()">
+        ⚡ Clean My File — Free
+      </button>
+
+      <div class="spinner" id="spinner"></div>
+      <div class="error" id="error"></div>
+
+      <!-- Result -->
+      <div class="result-box" id="resultBox">
+        <div class="check">✅</div>
+        <h3>Your file is clean!</h3>
+        <div class="stats" id="resultStats"></div>
+        <a class="download-btn" id="downloadBtn" href="#">⬇️ Download Cleaned File</a>
+        <p style="font-size:12px;color:#64748b;margin-top:8px;">File is deleted from our server after download</p>
+      </div>
+    </div>
+
+    <!-- Pricing -->
+    <div class="pricing-section">
+      <h2>More cleaning power?</h2>
+      <div class="pricing-cards">
+        <div class="price-card">
+          <h3 style="font-size:18px;font-weight:700;">Pay As You Go</h3>
+          <div class="price">$1.99 <span>/ file</span></div>
+          <p style="color:#64748b;font-size:13px;">No subscription, just pay when you need it</p>
+          <ul>
+            <li>10 credits bundle ($1.99 each)</li>
+            <li>All cleaning operations</li>
+            <li>Results stored 24 hours</li>
+            <li>Email support</li>
+          </ul>
+          <button class="price-btn secondary" onclick="buyCredits()">Buy 10 Credits — $19.90</button>
+        </div>
+        <div class="price-card featured">
+          <h3 style="font-size:18px;font-weight:700;">Pro Monthly</h3>
+          <div class="price">$9.99 <span>/ month</span></div>
+          <p style="color:#64748b;font-size:13px;">For regular cleaning needs</p>
+          <ul>
+            <li>Unlimited file cleaning</li>
+            <li>All operations + AI-powered</li>
+            <li>Priority support</li>
+            <li>Cancel anytime</li>
+          </ul>
+          <button class="price-btn primary" onclick="subscribe()">Subscribe — $9.99/mo</button>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p>🧹 CSV Cleaner Pro · Secure processing · Files deleted after 24h</p>
+      <p style="margin-top:4px;">Questions? hello@csvcleaner.pro</p>
+    </footer>
+  </div>
+
+  <script>
+    let selectedFile = null;
+    let currentOp = 'deduplicate';
+    let credits = 2; // Free tier
+    let stripe = null;
+    
+    try {
+      stripe = Stripe('{{ stripe_key }}');
+    } catch(e) {}
+
+    function handleFile(input) {
+      selectedFile = input.files[0];
+      if (selectedFile) {
+        document.getElementById('fileName').style.display = 'block';
+        document.getElementById('fileName').textContent = '📄 ' + selectedFile.name + ' (' + (selectedFile.size / 1024).toFixed(1) + ' KB)';
+        document.getElementById('uploadZone').style.borderColor = '#22c55e';
+        document.getElementById('uploadZone').style.background = '#f0fdf4';
+        document.getElementById('processBtn').disabled = false;
+      }
+    }
+
+    function selectOp(el) {
+      document.querySelectorAll('.op-btn').forEach(b => b.classList.remove('selected'));
+      el.classList.add('selected');
+      currentOp = el.dataset.op;
+    }
+
+    async function processFile() {
+      if (!selectedFile) {
+        showError('Please select a file first');
+        return;
+      }
+
+      if (credits <= 0) {
+        showError('You have 0 credits. Buy more or subscribe below.');
+        return;
+      }
+
+      const btn = document.getElementById('processBtn');
+      const spinner = document.getElementById('spinner');
+      btn.disabled = true;
+      btn.textContent = 'Processing...';
+      spinner.style.display = 'block';
+      hideError();
+
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+      formData.append('operation', currentOp);
+
+      try {
+        const res = await fetch('/process', { method: 'POST', body: formData });
+        const data = await res.json();
+
+        if (data.success) {
+          credits--;
+          document.getElementById('creditStatus').innerHTML = `Free tier: <strong>${credits}</strong> credits remaining`;
+          
+          document.getElementById('resultBox').style.display = 'block';
+          document.getElementById('resultStats').textContent = 
+            `📊 ${data.original_rows} rows → ${data.result_rows} rows (${data.original_rows - data.result_rows} removed)`;
+          document.getElementById('downloadBtn').href = data.download_url;
+          
+          document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth' });
+        } else {
+          showError(data.error || 'Processing failed');
+        }
+      } catch (e) {
+        showError('Connection error. Please try again.');
+      }
+
+      btn.disabled = false;
+      btn.textContent = '⚡ Clean My File — Free';
+      spinner.style.display = 'none';
+    }
+
+    function buyCredits() {
+      if (!stripe) { showError('Payment system loading...'); return; }
+      fetch('/create-checkout-session', { method: 'POST' })
+        .then(r => r.json())
+        .then(data => { if (data.url) window.location.href = data.url; })
+        .catch(e => showError('Payment error'));
+    }
+
+    function subscribe() {
+      if (!stripe) { showError('Payment system loading...'); return; }
+      fetch('/create-subscription', { method: 'POST' })
+        .then(r => r.json())
+        .then(data => { if (data.url) window.location.href = data.url; })
+        .catch(e => showError('Payment error'));
+    }
+
+    function showError(msg) {
+      const el = document.getElementById('error');
+      el.textContent = msg;
+      el.style.display = 'block';
+    }
+
+    function hideError() {
+      document.getElementById('error').style.display = 'none';
+    }
+
+    // Drag & drop
+    const zone = document.getElementById('uploadZone');
+    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      zone.classList.remove('dragover');
+      if (e.dataTransfer.files.length) {
+        document.getElementById('fileInput').files = e.dataTransfer.files;
+        handleFile(document.getElementById('fileInput'));
+      }
+    });
+  </script>
+</body>
+</html>
