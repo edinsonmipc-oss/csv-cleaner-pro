@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CSV Cleaner Pro — Clean your data in seconds</title>
+  <meta name="description" content="CSV Cleaner Pro deduplicates, cleans, and formats CSV files. Try 2 files free, then one-time payment of $9.99." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    /* ===== Reset & Base ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f8fafc;
+      color: #0f172a;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    img { max-width: 100%; height: auto; display: block; }
+
+    /* ===== Container ===== */
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* ===== Navigation ===== */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: #0f172a;
+      text-decoration: none;
+    }
+    .nav-logo .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 16px;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: #475569;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: #2563eb; }
+    .nav-cta {
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      color: white !important;
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-weight: 600 !important;
+    }
+    .nav-cta:hover { opacity: 0.9; color: white !important; }
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #0f172a;
+    }
+
+    /* ===== Hero Section ===== */
+    .hero {
+      padding: 80px 0 60px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, rgba(37,99,235,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #eff6ff;
+      color: #2563eb;
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      border: 1px solid rgba(37,99,235,0.15);
+    }
+    .hero h1 {
+      font-size: clamp(40px, 7vw, 68px);
+      font-weight: 900;
+      letter-spacing: -2px;
+      line-height: 1.05;
+      margin-bottom: 20px;
+    }
+    .hero h1 .gradient {
+      background: linear-gradient(135deg, #2563eb, #7c3aed, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p {
+      font-size: clamp(16px, 2.2vw, 20px);
+      color: #64748b;
+      max-width: 600px;
+      margin: 0 auto 32px;
+      line-height: 1.7;
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 32px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      color: white;
+      box-shadow: 0 4px 16px rgba(37,99,235,0.3);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(37,99,235,0.4);
+    }
+    .btn-secondary {
+      background: white;
+      color: #0f172a;
+      border: 2px solid #e2e8f0;
+    }
+    .btn-secondary:hover {
+      border-color: #2563eb;
+      transform: translateY(-2px);
+    }
+    .hero-visual {
+      margin-top: 48px;
+      position: relative;
+    }
+    .hero-visual img {
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+      border: 1px solid #e2e8f0;
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    /* ===== Trust / Stats Bar ===== */
+    .trust-bar {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      padding: 32px 0;
+      flex-wrap: wrap;
+      border-top: 1px solid #e2e8f0;
+      border-bottom: 1px solid #e2e8f0;
+      margin: 0 20px;
+    }
+    .trust-stat { text-align: center; }
+    .trust-stat .number {
+      font-size: 28px;
+      font-weight: 800;
+      color: #0f172a;
+    }
+    .trust-stat .label {
+      font-size: 13px;
+      color: #94a3b8;
+      font-weight: 500;
+      margin-top: 2px;
+    }
+
+    /* ===== Section Headers ===== */
+    .section {
+      padding: 80px 0;
+    }
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #eff6ff;
+      color: #2563eb;
+      padding: 4px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+    .section-subtitle {
+      font-size: 17px;
+      color: #64748b;
+      max-width: 560px;
+      line-height: 1.7;
+    }
+    .section-header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+    .section-header .section-subtitle {
+      margin: 0 auto;
+    }
+
+    /* ===== Features Grid ===== */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 24px;
+    }
+    .feature-card {
+      background: white;
+      border-radius: 16px;
+      padding: 32px 28px;
+      border: 1px solid #e2e8f0;
+      transition: all 0.25s ease;
+    }
+    .feature-card:hover {
+      border-color: #2563eb;
+      box-shadow: 0 8px 32px rgba(37,99,235,0.08);
+      transform: translateY(-4px);
+    }
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+    .feature-icon.blue { background: #eff6ff; }
+    .feature-icon.purple { background: #f5f3ff; }
+    .feature-icon.green { background: #f0fdf4; }
+    .feature-icon.pink { background: #fdf2f8; }
+    .feature-card h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .feature-card p {
+      font-size: 14px;
+      color: #64748b;
+      line-height: 1.7;
+    }
+
+    /* ===== How It Works ===== */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      counter-reset: step;
+    }
+    .step {
+      text-align: center;
+      position: relative;
+    }
+    .step::after {
+      content: '';
+      position: absolute;
+      top: 32px;
+      right: -16px;
+      width: 32px;
+      height: 2px;
+      background: #cbd5e1;
+    }
+    .step:last-child::after { display: none; }
+    .step-number {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      color: white;
+      font-size: 22px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+    .step h4 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .step p {
+      font-size: 14px;
+      color: #64748b;
+      line-height: 1.7;
+    }
+
+    /* ===== Pricing Section ===== */
+    .pricing-bg {
+      background: white;
+      border-top: 1px solid #e2e8f0;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .price-card {
+      background: #f8fafc;
+      border-radius: 20px;
+      padding: 40px 32px;
+      border: 2px solid #e2e8f0;
+      text-align: center;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .price-card.featured {
+      border-color: #2563eb;
+      background: white;
+      box-shadow: 0 8px 32px rgba(37,99,235,0.1);
+    }
+    .price-card.featured::before {
+      content: 'POPULAR';
+      position: absolute;
+      top: -13px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      color: white;
+      padding: 4px 20px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+    .price-card .plan-name {
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #64748b;
+      margin-bottom: 8px;
+    }
+    .price-card .price {
+      font-size: 44px;
+      font-weight: 900;
+      color: #0f172a;
+      margin: 8px 0;
+      letter-spacing: -1px;
+    }
+    .price-card .price span {
+      font-size: 16px;
+      font-weight: 500;
+      color: #94a3b8;
+    }
+    .price-card .price-desc {
+      font-size: 14px;
+      color: #64748b;
+      margin-bottom: 24px;
+    }
+    .price-card ul {
+      list-style: none;
+      text-align: left;
+      margin: 0 0 28px;
+    }
+    .price-card li {
+      padding: 8px 0;
+      font-size: 14px;
+      color: #475569;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .price-card li::before {
+      content: '✓';
+      color: #22c55e;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+    .price-card .btn {
+      width: 100%;
+      justify-content: center;
+    }
+    .price-card .btn-outline {
+      background: transparent;
+      border: 2px solid #e2e8f0;
+      color: #0f172a;
+    }
+    .price-card .btn-outline:hover {
+      border-color: #2563eb;
+    }
+    .pricing-note {
+      text-align: center;
+      font-size: 13px;
+      color: #94a3b8;
+      margin-top: 24px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ===== CTA Section ===== */
+    .cta-section {
+      padding: 80px 0;
+      text-align: center;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: white;
+    }
+    .cta-section h2 {
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 16px;
+    }
+    .cta-section p {
+      font-size: 17px;
+      color: #94a3b8;
+      max-width: 520px;
+      margin: 0 auto 32px;
+      line-height: 1.7;
+    }
+    .cta-section .btn-primary {
+      box-shadow: 0 4px 24px rgba(37,99,235,0.4);
+    }
+
+    /* ===== Footer ===== */
+    footer {
+      background: #0f172a;
+      color: #94a3b8;
+      padding: 48px 0 40px;
+      border-top: 1px solid #1e293b;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 32px;
+    }
+    .footer-brand h3 {
+      font-size: 18px;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 8px;
+    }
+    .footer-brand p {
+      font-size: 13px;
+      line-height: 1.7;
+      max-width: 300px;
+    }
+    .footer-col h4 {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: white;
+      margin-bottom: 12px;
+    }
+    .footer-col ul {
+      list-style: none;
+    }
+    .footer-col li {
+      margin-bottom: 8px;
+    }
+    .footer-col a {
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 13px;
+      transition: color 0.2s;
+    }
+    .footer-col a:hover { color: white; }
+    .footer-bottom {
+      border-top: 1px solid #1e293b;
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 12px;
+    }
+    .footer-bottom-links {
+      display: flex;
+      gap: 16px;
+    }
+    .footer-bottom-links a {
+      color: #64748b;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-bottom-links a:hover { color: white; }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .mobile-menu-btn { display: block; }
+      .hero { padding: 48px 0 40px; }
+      .steps { grid-template-columns: 1fr; gap: 40px; }
+      .step::after { display: none; }
+      .pricing-grid { grid-template-columns: 1fr; max-width: 400px; }
+      .footer-grid { grid-template-columns: 1fr; text-align: center; }
+      .footer-brand p { max-width: 100%; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+      .trust-bar { gap: 24px; }
+      .trust-stat .number { font-size: 22px; }
+    }
+
+    @media (max-width: 480px) {
+      .hero-actions { flex-direction: column; align-items: center; }
+      .hero-actions .btn { width: 100%; max-width: 300px; justify-content: center; }
+      nav { padding: 12px 16px; }
+    }
+
+    /* ===== Animations ===== */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-in {
+      animation: fadeInUp 0.6s ease forwards;
+    }
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+    .delay-4 { animation-delay: 0.4s; }
+  </style>
+</head>
+<body>
+
+  <!-- ===== Navigation ===== -->
+  <nav>
+    <a href="#" class="nav-logo">
+      <span class="logo-icon">🧹</span>
+      CSV Cleaner Pro
+    </a>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#how-it-works">How It Works</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="https://buy.stripe.com/9B69AU0Dh5q13Zl4tieUU03" class="nav-cta">Get Started</a></li>
+    </ul>
+    <button class="mobile-menu-btn" aria-label="Menu">☰</button>
+  </nav>
+
+  <!-- ===== Hero ===== -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-badge">✨ Used by data teams worldwide</div>
+      <h1 class="animate-in">
+        Messy data?<br />
+        <span class="gradient">We'll clean it.</span>
+      </h1>
+      <p class="animate-in delay-1">
+        CSV Cleaner Pro deduplicates, formats, and scrubs your CSV files in seconds.
+        No coding. No hassle. Just clean data.
+      </p>
+      <div class="hero-actions animate-in delay-2">
+        <a href="https://buy.stripe.com/9B69AU0Dh5q13Zl4tieUU03" class="btn btn-primary">
+          🚀 Get CSV Cleaner Pro — $9.99
+        </a>
+        <a href="#features" class="btn btn-secondary">
+          See what it does →
+        </a>
+      </div>
+      <p style="font-size:13px;color:#94a3b8;margin-top:16px;">
+        Try your first 2 files free · No credit card required
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== Trust Bar ===== -->
+  <div class="trust-bar">
+    <div class="trust-stat">
+      <div class="number">2</div>
+      <div class="label">Free files to try</div>
+    </div>
+    <div class="trust-stat">
+      <div class="number">$9.99</div>
+      <div class="label">One-time payment</div>
+    </div>
+    <div class="trust-stat">
+      <div class="number">4</div>
+      <div class="label">Cleaning operations</div>
+    </div>
+    <div class="trust-stat">
+      <div class="number">⚡</div>
+      <div class="label">Instant results</div>
+    </div>
+  </div>
+
+  <!-- ===== Features ===== -->
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">Features</span>
+        <h2 class="section-title">Everything you need to clean your CSVs</h2>
+        <p class="section-subtitle">
+          Four powerful cleaning operations. One simple upload. Clean data in seconds.
+        </p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card animate-in delay-1">
+          <div class="feature-icon blue">🗑️</div>
+          <h3>Remove Duplicates</h3>
+          <p>Delete exact duplicate rows in one click. Perfect for exported contact lists, survey data, and merged spreadsheets.</p>
+        </div>
+        <div class="feature-card animate-in delay-2">
+          <div class="feature-icon purple">📧</div>
+          <h3>Extract Emails</h3>
+          <p>Pull every email address from your data automatically. Great for mining email lists from messy exports.</p>
+        </div>
+        <div class="feature-card animate-in delay-3">
+          <div class="feature-icon green">✨</div>
+          <h3>Clean Whitespace</h3>
+          <p>Remove extra spaces, trim cells, and normalise formatting. Turns ragged spreadsheets into pristine data.</p>
+        </div>
+        <div class="feature-card animate-in delay-4">
+          <div class="feature-icon pink">🔧</div>
+          <h3>Fill Empty Cells</h3>
+          <p>Replace every blank cell with 'N/A' automatically. Never upload incomplete data to your CRM again.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== How It Works ===== -->
+  <section class="section" id="how-it-works" style="background:#f1f5f9;">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">How It Works</span>
+        <h2 class="section-title">Clean data in three simple steps</h2>
+        <p class="section-subtitle">
+          No sign-up required. Just upload, pick a cleaning operation, and download.
+        </p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h4>Upload your CSV</h4>
+          <p>Drag and drop or browse for any CSV or Excel file — up to 10 MB.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <h4>Choose an operation</h4>
+          <p>Select from deduplication, email extraction, whitespace cleaning, or filling empty cells.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <h4>Download clean data</h4>
+          <p>Your cleaned file is ready instantly. We delete it from our servers after download.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Pricing ===== -->
+  <section class="section pricing-bg" id="pricing">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">Pricing</span>
+        <h2 class="section-title">Try free, then own it forever</h2>
+        <p class="section-subtitle">
+          2 free files to test the waters. One low one-time price. No subscriptions, no surprises.
+        </p>
+      </div>
+      <div class="pricing-grid">
+        <!-- Free Tier -->
+        <div class="price-card">
+          <div class="plan-name">Free Trial</div>
+          <div class="price">$0 <span>— 2 files</span></div>
+          <p class="price-desc">Test all features risk-free</p>
+          <ul>
+            <li>2 CSV files to clean</li>
+            <li>All 4 cleaning operations</li>
+            <li>Instant download</li>
+            <li>No credit card needed</li>
+          </ul>
+          <a href="#hero" class="btn btn-outline">Try for free</a>
+        </div>
+        <!-- Pro Tier -->
+        <div class="price-card featured">
+          <div class="plan-name">CSV Cleaner Pro</div>
+          <div class="price">$9.99 <span>once</span></div>
+          <p class="price-desc">Unlimited access. One payment. Forever.</p>
+          <ul>
+            <li>Unlimited file cleaning</li>
+            <li>All 4 cleaning operations</li>
+            <li>No recurring fees</li>
+            <li>Priority email support</li>
+            <li>Secure Stripe checkout</li>
+          </ul>
+          <a href="https://buy.stripe.com/9B69AU0Dh5q13Zl4tieUU03" class="btn btn-primary">
+            🚀 Buy Now — $9.99
+          </a>
+        </div>
+      </div>
+      <p class="pricing-note">
+        🔒 Secure payment powered by Stripe · Your files are never stored permanently
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== CTA ===== -->
+  <section class="cta-section">
+    <div class="container">
+      <h2>Ready to clean your data?</h2>
+      <p>Join thousands of professionals who trust CSV Cleaner Pro. Try 2 files free, then unlock unlimited cleaning for a single $9.99 payment.</p>
+      <a href="https://buy.stripe.com/9B69AU0Dh5q13Zl4tieUU03" class="btn btn-primary">
+        🚀 Get CSV Cleaner Pro — $9.99
+      </a>
+      <p style="font-size:12px;color:#64748b;margin-top:16px;">
+        One-time payment · Unlimited use · No subscription
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== Footer ===== -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h3>🧹 CSV Cleaner Pro</h3>
+          <p>Clean, deduplicate, and format your CSV files in seconds. Built for professionals who value clean data.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#how-it-works">How It Works</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li>Melbourne, Australia</li>
+            <li>ABN: 00 000 000 000</li>
+            <li><a href="mailto:hello@csvcleaner.pro">hello@csvcleaner.pro</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 CSV Cleaner Pro. All rights reserved.</span>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== Mobile menu script (simple toggle) ===== -->
+  <script>
+    document.querySelector('.mobile-menu-btn')?.addEventListener('click', function() {
+      const nav = document.querySelector('.nav-links');
+      nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
+      nav.style.flexDirection = 'column';
+      nav.style.position = 'absolute';
+      nav.style.top = '60px';
+      nav.style.left = '0';
+      nav.style.right = '0';
+      nav.style.background = 'white';
+      nav.style.padding = '20px';
+      nav.style.boxShadow = '0 8px 24px rgba(0,0,0,0.08)';
+      nav.style.borderRadius = '0 0 12px 12px';
+      nav.style.zIndex = '100';
+    });
+
+    // Simple scroll-triggered animation
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.feature-card, .step').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(24px)';
+      el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(el);
+    });
+  </script>
+
+</body>
+</html>
